@@ -11,17 +11,19 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 
 var dataToSend = "";
-server.post('/get-movie-details', function (req, res) {
-    let movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.movie ? req.body.result.parameters.movie : 'The Godfather';
-    let reqUrl = encodeURI('http://api.openweathermap.org/data/2.5/weather?q=' + movieToSearch + '&appid=c8608c37f0247f5a563aa6b7cc7d0dac');
+server.post('/getUberDetails', function (req, res) {
+    let _query ='';
+    let movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.location ? _query=req.body.result.parameters.location : _query=req.body.result.parameters.location ;
+    console.log(_query);
+    let reqUrl = encodeURI('http://api.openweathermap.org/data/2.5/weather?q=' + _query + '&appid=c8608c37f0247f5a563aa6b7cc7d0dac');
 
     requestAPI(reqUrl)
         .then(function (data) {
-            //   console.log( data)
+              console.log( data)
             res.json({
                 speech: "data",
                 displayText: data[0].coord,
-                source: 'get-movie-details'
+                source: 'getUberDetails'
             });
         })
         .catch(function (err) {
@@ -29,7 +31,7 @@ server.post('/get-movie-details', function (req, res) {
             return res.json({
                 speech: err,
                 displayText: 'Something went wrong!',
-                source: 'get-movie-details'
+                source: 'getUberDetails'
             });
         })
     
