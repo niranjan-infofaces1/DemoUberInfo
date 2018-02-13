@@ -13,6 +13,9 @@ server.use(bodyParser.json());
 var dataToSend = "";
 let action = "";
 server.post('/', function (request, response) {
+    console.log(' Request headers: ' + JSON.stringify(request.headers));
+    console.log(' Request body: ' + JSON.stringify(request.body));
+    
     ProcessRequest(request, response)
 });
 function ProcessRequest(req, res) {
