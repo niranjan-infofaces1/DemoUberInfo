@@ -67,11 +67,21 @@ function ProcessRequest(req, res) {
                     for (var i = 0; i < _productsCount; i++) {
                         _DisplayName.push(_productsData.products[i].display_name)
                     }
-                    res.json({ data: _DisplayName.toString() })
+                   // res.json({ data: _DisplayName.toString() })
+                    return res.json({
+                        speech: _DisplayName.toString(),
+                        displayText:_DisplayName.toString(),
+                        source: 'getProductDetails'
+                    });
                 })
                 .catch(function (err) {
                     console.error(err);
-                    res.json({ Error: err })
+                //    res.json({ Error: err })
+                return res.json({
+                    speech: "Sorry no data found",
+                    displayText: "Sorry no data found",
+                    source: 'getProductDetails'
+                });
                 })
         }
     };
