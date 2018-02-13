@@ -17,7 +17,11 @@ let action = "";
 server.post('/', function (request, response) {
     console.log(' Request headers: ' + JSON.stringify(request.headers));
     console.log(' Request body: ' + JSON.stringify(request.body));
-
+    if (requestSource === googleAssistantRequest) {
+        sendGoogleResponse("welcome to local"); // Send simple response to user
+    } else {
+        sendResponse("welcome to local"); // Send simple response to user
+    }
     ProcessRequest(request, response)
 });
 function ProcessRequest(req, res) {
