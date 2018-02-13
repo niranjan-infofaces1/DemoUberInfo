@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const requestAPI = require('request-promise');
-const API_KEYS = require('./Key/API_KEY')
+const API_KEYS = require('/Key/API_KEY')
 const server = express();
 server.use(bodyParser.urlencoded({
     extended: true
