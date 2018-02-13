@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const requestAPI = require('request-promise');
-const API_KEYS = require('/Key/API_KEY')
+//const API_KEYS = require('/Key/API_KEY')
 const server = express();
 server.use(bodyParser.urlencoded({
     extended: true
@@ -55,9 +55,9 @@ function ProcessRequest(req, res) {
             let Url = 'https://api.uber.com/v1.2/products?';    // #1
             let latitude = '13.0827';                           // #2
             let longitude = '80.2707'                           // #3
-            let token = API_KEYS.UBER_API_KEYS.SERVER_TOKEN;    // #4
-            //https://api.uber.com/v1.2/products?latitude=13.0827&longitude=80.2707&server_token=9q6z4n75sEhTzekU0eEXIo8_e1yePXOZ47SSVEeD
-            let reqUrl = encodeURI(Url + 'latitude=' + latitude + '&' + 'longitude=' + longitude + "&" + "server_token=" + token)
+        //    let token = API_KEYS.UBER_API_KEYS.SERVER_TOKEN;    // #4
+            //https://api.uber.com/v1.2/products?latitude=13.0827&longitude=80.2707&server_token=heroku logs --app demouber --tailheroku logs --app demouber --tail
+            let reqUrl = encodeURI(Url + 'latitude=' + latitude + '&' + 'longitude=' + longitude + "&" + "server_token=heroku logs --app demouber --tail" + token)
             console.log(reqUrl);
             requestAPI(reqUrl)
                 .then(function (data) {
