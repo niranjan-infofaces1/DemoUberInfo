@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const requestAPI = require('request-promise');
+const DialogflowApp = require('actions-on-google').DialogflowApp; 
 //const API_KEYS = require('/Key/API_KEY')
 const server = express();
 server.use(bodyParser.urlencoded({
@@ -28,7 +29,16 @@ function ProcessRequest(req, res) {
     console.log("inputContexts: " + inputContexts);
     console.log("parameters :" + JSON.stringify(parameters));
     console.log("requestSource :" + requestSource);
+    const app = new DialogflowApp({request: request, response: response});
     const actionHandlers = {
+        'input.welcome': () => {
+            // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
+            if (requestSource === googleAssistantRequest) {
+              sendGoogleResponse('Hello, Welcome to my Dialogflow agent!'); // Send simple response to user
+            } else {
+              sendResponse('Hello, Welcome to my Dialogflow agent!'); // Send simple response to user
+            }
+          },
         'getUberDetails': () => {
             let _query = '';
             _query = req.body.result.parameters.location;
@@ -86,12 +96,81 @@ function ProcessRequest(req, res) {
                     source: 'getProductDetails'
                 });
                 })
-        }
+        },
+        'default': () => {
+            // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
+            if (requestSource === googleAssistantRequest) {
+              let responseToUser = {
+                //googleRichResponse: googleRichResponse, // Optional, uncomment to enable
+                //googleOutputContexts: ['weather', 2, { ['city']: 'rome' }], // Optional, uncomment to enable
+                speech: 'This message is from Dialogflow\'s Cloud Functions for Firebase editor!', // spoken response
+                text: 'This is from Dialogflow\'s Cloud Functions for Firebase editor! :-)' // displayed response
+              };
+              sendGoogleResponse(responseToUser);
+            } else {
+              let responseToUser = {
+                //data: richResponsesV1, // Optional, uncomment to enable
+                //outputContexts: [{'name': 'weather', 'lifespan': 2, 'parameters': {'city': 'Rome'}}], // Optional, uncomment to enable
+                speech: 'This message is from Dialogflow\'s Cloud Functions for Firebase editor!', // spoken response
+                text: 'This is from Dialogflow\'s Cloud Functions for Firebase editor! :-)' // displayed response
+              };
+              sendResponse(responseToUser);
+            }
+          }
     };
     if (!actionHandlers[action]) {
         action = 'default';
     }
     actionHandlers[action]();
+     
+    // Function to send correctly formatted Google Assistant responses to Dialogflow which are then sent to the user
+  function sendGoogleResponse (responseToUser) {
+    if (typeof responseToUser === 'string') {
+      app.ask(responseToUser); // Google Assistant response
+    } else {
+      // If speech or displayText is defined use it to respond
+      let googleResponse = app.buildRichResponse().addSimpleResponse({
+        speech: responseToUser.speech || responseToUser.displayText,
+        displayText: responseToUser.displayText || responseToUser.speech
+      });
+      // Optional: Overwrite previous response with rich response
+      if (responseToUser.googleRichResponse) {
+        googleResponse = responseToUser.googleRichResponse;
+      }
+      // Optional: add contexts (https://dialogflow.com/docs/contexts)
+      if (responseToUser.googleOutputContexts) {
+        app.setContext(...responseToUser.googleOutputContexts);
+      }
+      console.log('Response to Dialogflow (AoG): ' + JSON.stringify(googleResponse));
+      app.ask(googleResponse); // Send response to Dialogflow and Google Assistant
+    }
+  }
+  // Function to send correctly formatted responses to Dialogflow which are then sent to the user
+  function sendResponse (responseToUser) {
+    // if the response is a string send it as a response to the user
+    if (typeof responseToUser === 'string') {
+      let responseJson = {};
+      responseJson.speech = responseToUser; // spoken response
+      responseJson.displayText = responseToUser; // displayed response
+      
+      response.json(responseJson); // Send response to Dialogflow
+      response.append("Google-Assistant-API-Version", "v1");
+    } else {
+      // If the response to the user includes rich responses or contexts send them to Dialogflow
+      let responseJson = {};
+      // If speech or displayText is defined, use it to respond (if one isn't defined use the other's value)
+      responseJson.speech = responseToUser.speech || responseToUser.displayText;
+      responseJson.displayText = responseToUser.displayText || responseToUser.speech;
+      // Optional: add rich messages for integrations (https://dialogflow.com/docs/rich-messages)
+      responseJson.data = responseToUser.data;
+      // Optional: add contexts (https://dialogflow.com/docs/contexts)
+      responseJson.contextOut = responseToUser.outputContexts;
+      console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
+      response.json(responseJson); // Send response to Dialogflow
+      response.append("Google-Assistant-API-Version", "v1");
+    }
+  }
+
 }
 server.listen((process.env.PORT || 8000), function () {
     console.log("Server is up and running...");
