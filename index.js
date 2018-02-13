@@ -17,7 +17,10 @@ let parameters = request.body.result.parameters; // https://dialogflow.com/docs/
 let inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
 let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
 let _Query =request.body.result.resolvedQuery;
-console.log("action: "+action+"\n"+"inputContexts: "+inputContexts+"\n"+"requestSource :"+requestSource+"\n"+"requestSource :"+requestSource+"\n");
+console.log("action: "+action);
+console.log("inputContexts: "+inputContexts);
+console.log("requestSource :"+requestSource);
+console.log("requestSource :"+requestSource);
 });
 server.post('/getUberDetails', function (req, res) {
     let _query ='';
