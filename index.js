@@ -11,6 +11,14 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 
 var dataToSend = "";
+server.post('/', function (req, res) {
+let action = request.body.result.action; // https://dialogflow.com/docs/actions-and-parameters
+let parameters = request.body.result.parameters; // https://dialogflow.com/docs/actions-and-parameters
+let inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
+let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
+let _Query =request.body.result.resolvedQuery;
+console.log("action: "+action+""+"inputContexts: "+inputContexts);
+});
 server.post('/getUberDetails', function (req, res) {
     let _query ='';
     let movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.location ? _query=req.body.result.parameters.location : _query=req.body.result.parameters.location ;
