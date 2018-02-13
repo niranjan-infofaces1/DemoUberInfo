@@ -57,7 +57,7 @@ function ProcessRequest(req, res) {
             let longitude = '80.2707'                           // #3
         //    let token = API_KEYS.UBER_API_KEYS.SERVER_TOKEN;    // #4
             //https://api.uber.com/v1.2/products?latitude=13.0827&longitude=80.2707&server_token=heroku logs --app demouber --tailheroku logs --app demouber --tail
-            let reqUrl = encodeURI(Url + 'latitude=' + latitude + '&' + 'longitude=' + longitude + "&" + "server_token=heroku logs --app demouber --tail" + token)
+            let reqUrl = encodeURI(Url + 'latitude=' + latitude + '&' + 'longitude=' + longitude + "&" + "server_token9q6z4n75sEhTzekU0eEXIo8_e1yePXOZ47SSVEeD")
             console.log(reqUrl);
             requestAPI(reqUrl)
                 .then(function (data) {
