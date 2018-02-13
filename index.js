@@ -11,7 +11,7 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 
 var dataToSend = "";
-server.post('/', function (req, res) {
+server.post('/', function (request, response) {
 let action = request.body.result.action; // https://dialogflow.com/docs/actions-and-parameters
 let parameters = request.body.result.parameters; // https://dialogflow.com/docs/actions-and-parameters
 let inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
