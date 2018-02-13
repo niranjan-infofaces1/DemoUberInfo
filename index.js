@@ -167,9 +167,9 @@ function ProcessRequest(req, res) {
             let responseJson = {};
             responseJson.speech = responseToUser; // spoken response
             responseJson.displayText = responseToUser; // displayed response
-
-            res.json(responseJson); // Send response to Dialogflow
             res.append("Google-Assistant-API-Version", "v1");
+            res.json(responseJson); // Send response to Dialogflow
+
         } else {
             // If the response to the user includes rich responses or contexts send them to Dialogflow
             let responseJson = {};
@@ -180,9 +180,10 @@ function ProcessRequest(req, res) {
             responseJson.data = responseToUser.data;
             // Optional: add contexts (https://dialogflow.com/docs/contexts)
             responseJson.contextOut = responseToUser.outputContexts;
+            res.append("Google-Assistant-API-Version", "v1");
             console.log('Response to Dialogflow: ' + JSON.stringify(responseJson));
              
-            res.append("Google-Assistant-API-Version", "v1");
+           
         }
     }
 
