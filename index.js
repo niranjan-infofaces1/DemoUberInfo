@@ -19,7 +19,7 @@ let requestSource = (request.body.originalRequest) ? request.body.originalReques
 let _Query =request.body.result.resolvedQuery;
 console.log("action: "+action);
 console.log("inputContexts: "+inputContexts);
-console.log("requestSource :"+requestSource);
+console.log("parameters :"+parameters);
 console.log("requestSource :"+requestSource);
 });
 server.post('/getUberDetails', function (req, res) {
